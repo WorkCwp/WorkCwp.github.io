@@ -1,462 +1,502 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Tetris — DevPlay</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<style>
-:root{
-  --bg:#0b1220;
-  --panel:#0e1724;
-  --accent:#7c3aed;
-  --muted:#9aa3b2;
-  --glass: rgba(255,255,255,0.03);
-}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;background:linear-gradient(180deg,#071018,#0b1220);color:#e6eef6}
-.header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px}
-.title{display:flex;align-items:center;gap:12px}
-.logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,0.6)}
-h1{margin:0;font-size:1.1rem}
-.controls{display:flex;gap:8px;align-items:center}
-.btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px;color:#e6eef6;cursor:pointer}
-.btn.primary{background:var(--accent);color:white;border:none}
-.container{display:grid;grid-template-columns:320px 1fr 220px;gap:16px;padding:18px;align-items:start}
-.panel{background:var(--panel);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
-.game-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
-#board{background:#061018;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
-.info{display:flex;flex-direction:column;gap:8px}
-.small{font-size:12px;color:var(--muted)}
-.row{display:flex;gap:8px;align-items:center}
-.preview, .hold{background:#061018;border-radius:6px;padding:8px;min-height:80px;display:flex;align-items:center;justify-content:center}
-.footer{padding:18px;text-align:center;color:var(--muted);font-size:13px}
-kbd{background:rgba(255,255,255,0.04);padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.02)}
-.mobile-ctrls{display:none;margin-top:8px;gap:8px}
-.mobile-ctrls .btn{padding:12px;border-radius:10px}
-.legend{font-size:12px;color:var(--muted)}
-.score-big{font-size:1.4rem;font-weight:700}
-@media(max-width:980px){
-  .container{grid-template-columns:1fr; padding:12px}
-  .mobile-ctrls{display:flex}
-  .controls{display:none}
-}
-</style>
-</head>
-<body>
-<header class="header">
-  <div class="title">
-    <div class="logo">T</div>
-    <div>
-      <h1>Tetris — DevPlay</h1>
-      <div class="small">Diseñado para GitHub Pages · Guarda puntuaciones en localStorage</div>
-    </div>
-  </div>
-  <div class="controls">
-    <button id="btn-start" class="btn primary">Start</button>
-    <button id="btn-pause" class="btn">Pause</button>
-    <button id="btn-reset" class="btn">Reset</button>
-    <button id="btn-sound" class="btn">Sound: On</button>
-  </div>
-</header>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Knight Bot - WhatsApp Linker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    :root {
+      --primary-color: #000000;
+      --secondary-color: #ffffff;
+      --accent-color: #f0f0f0;
+      --text-color: #000000;
+      --background-color: #ffffff;
+      --hover-color: #f5f5f5;
+      --border-color: rgba(0, 0, 0, 0.1);
+    }
 
-<main class="container">
-  <aside class="panel">
-    <div class="small">Controles</div>
-    <div style="margin-top:8px" class="row">
-      <div><kbd>← →</kbd> Mover</div>
-      <div><kbd>↑</kbd> Rotar</div>
-      <div><kbd>↓</kbd> Bajar</div>
-    </div>
-    <div style="margin-top:12px" class="small">Información</div>
-    <div style="margin-top:8px" class="info">
-      <div class="row"><div>Score</div><div style="margin-left:auto" class="score-big" id="score">0</div></div>
-      <div class="row small"><div>Level</div><div style="margin-left:auto" id="level">1</div></div>
-      <div class="row small"><div>Lines</div><div style="margin-left:auto" id="lines">0</div></div>
-      <div class="row small"><div>Highscore</div><div style="margin-left:auto" id="high">0</div></div>
-    </div>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    <div style="margin-top:12px">
-      <div class="small">Next</div>
-      <div class="preview" id="next"></div>
-    </div>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+    }
 
-    <div style="margin-top:10px">
-      <div class="small">Hold</div>
-      <div class="hold" id="hold"></div>
-    </div>
+    .container {
+      width: 100%;
+      max-width: 450px;
+      background: var(--background-color);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border-color);
+    }
 
-    <div style="margin-top:12px" class="small">Ajustes</div>
-    <div style="margin-top:8px" class="row">
-      <label class="small">Velocidad base</label>
-      <input id="speed" type="range" min="1" max="6" value="2" style="margin-left:auto">
-    </div>
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
 
-    <div style="margin-top:12px" class="small">Movimientos móviles</div>
-    <div class="mobile-ctrls">
-      <button id="m-left" class="btn">◀</button>
-      <button id="m-rot" class="btn">⟳</button>
-      <button id="m-right" class="btn">▶</button>
-      <button id="m-drop" class="btn">↓</button>
-    </div>
+    .logo {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 16px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: white;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    }
 
-  </aside>
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-color);
+    }
 
-  <section class="panel game-wrap">
-    <canvas id="board" width="320" height="640"></canvas>
-    <div class="small legend">Presiona Space para drop instantáneo · Mantén ↓ para acelerar</div>
-  </section>
+    .subtitle {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.7);
+      margin-bottom: 20px;
+    }
 
-  <aside class="panel">
-    <div class="small">Top Scores</div>
-    <div id="scores" style="margin-top:8px;max-height:300px;overflow:auto"></div>
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
 
-    <div style="margin-top:12px" class="small">Exportar / Importar</div>
-    <div style="margin-top:8px" class="row">
-      <button id="btn-export" class="btn">Exportar</button>
-      <button id="btn-import" class="btn">Importar</button>
-    </div>
-    <textarea id="data-area" style="width:100%;height:80px;margin-top:8px;background:#061018;color:#e6eef6;border-radius:8px;padding:8px;border:1px solid rgba(255,255,255,0.03)"></textarea>
+    .social-icons a {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
 
-    <div style="margin-top:12px" class="small">Instrucciones</div>
-    <div class="small" style="margin-top:8px">Usa teclado o controles móviles. La partida se guarda automáticamente en el navegador al terminar.</div>
-  </aside>
-</main>
+    .social-icons a.youtube { background: #FF0000; }
+    .social-icons a.telegram { background: #0088cc; }
+    .social-icons a.whatsapp { background: #0cfa10; }
+    .social-icons a.github { background: #333; }
 
-<div class="footer">Creado con ❤️ — Sube estos archivos a GitHub y activa Pages desde la rama main (root)</div>
+    .social-icons a:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
 
-<script>
-// Tetris minimal but feature-rich implementation
-(() => {
-const canvas = document.getElementById('board');
-const ctx = canvas.getContext('2d');
-const cols = 10, rows = 20;
-let cellSize = Math.floor(canvas.width / cols);
-const scoreEl = document.getElementById('score');
-const levelEl = document.getElementById('level');
-const linesEl = document.getElementById('lines');
-const highEl = document.getElementById('high');
-const nextEl = document.getElementById('next');
-const holdEl = document.getElementById('hold');
-const scoresEl = document.getElementById('scores');
+    /* Toggle Switch Styles */
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      background: var(--hover-color);
+      border-radius: 12px;
+      padding: 4px;
+      border: 1px solid var(--border-color);
+    }
 
-let dropInterval = 1000;
-let lastTime = 0;
-let dropCounter = 0;
-let arena = createMatrix(cols, rows);
-let player = createPlayer();
-let nextPieces = [];
-let holdPiece = null;
-let canHold = true;
-let score = 0, level = 1, lines = 0;
-let highscore = Number(localStorage.getItem('tetris_high')||0);
-highEl.textContent = highscore;
+    .toggle-option {
+      flex: 1;
+      padding: 10px 16px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
 
-// pieces and colors
-const PIECES = {
-  I: [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],
-  J: [[1,0,0],[1,1,1],[0,0,0]],
-  L: [[0,0,1],[1,1,1],[0,0,0]],
-  O: [[1,1],[1,1]],
-  S: [[0,1,1],[1,1,0],[0,0,0]],
-  T: [[0,1,0],[1,1,1],[0,0,0]],
-  Z: [[1,1,0],[0,1,1],[0,0,0]]
-};
-const COLORS = { I:'#06b6d4', J:'#7c3aed', L:'#f59e0b', O:'#fca5a5', S:'#60a5fa', T:'#ef4444', Z:'#34d399' };
+    .toggle-option.active {
+      background: var(--primary-color);
+      color: var(--secondary-color);
+    }
 
-function createMatrix(w,h){
-  const m = [];
-  for(let y=0;y<h;y++){ m.push(new Array(w).fill(0)); }
-  return m;
-}
+    .toggle-option:not(.active) {
+      color: var(--text-color);
+    }
 
-function drawCell(x,y,col){
-  const s = cellSize;
-  ctx.fillStyle = col;
-  ctx.fillRect(x*s+1,y*s+1,s-2,s-2);
-  // glossy
-  ctx.fillStyle = 'rgba(255,255,255,0.06)';
-  ctx.fillRect(x*s+1,y*s+1,s-2,Math.round(s*0.25));
-}
+    .toggle-option:hover:not(.active) {
+      background: var(--background-color);
+    }
+    .copy-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--hover-color);
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
 
-function draw(){
-  ctx.fillStyle = '#061018';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-  // arena
-  for(let y=0;y<rows;y++){
-    for(let x=0;x<cols;x++){
-      if(arena[y][x]) drawCell(x,y, COLORS[arena[y][x]]);
-      else {
-        ctx.strokeStyle = 'rgba(255,255,255,0.02)';
-        ctx.strokeRect(x*cellSize, y*cellSize, cellSize, cellSize);
+    .copy-btn:hover {
+      background: var(--background-color);
+      border-color: var(--primary-color);
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .input-group.hidden {
+      display: none;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 13px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--background-color);
+      color: var(--text-color);
+      font-size: 15px;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .generate-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary-color);
+      border: none;
+      border-radius: 12px;
+      color: var(--secondary-color);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 16px;
+    }
+
+    .generate-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .generate-btn.hidden {
+      display: none;
+    }
+
+    .code-display {
+      background: var(--hover-color);
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid var(--border-color);
+    }
+
+    .qr-display {
+      background: var(--hover-color);
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 16px;
+      border: 1.5px solid var(--border-color);
+      display: none;
+    }
+
+    .qr-image {
+      max-width: 280px;
+      max-height: 280px;
+      margin: 0 auto 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .qr-instructions {
+      font-size: 13px;
+      color: rgba(0, 0, 0, 0.7);
+      line-height: 1.5;
+    }
+
+    .success-message {
+      color: #000aff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 16px;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 16px 0;
+    }
+
+    .loading i {
+      font-size: 24px;
+      color: var(--primary-color);
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 400px;
+      }
+
+      .code-display {
+        font-size: 16px;
+        min-height: 50px;
+      }
+
+      .qr-image {
+        max-width: 240px;
+        max-height: 240px;
+      }
+
+      .qr-display {
+        padding: 20px;
       }
     }
-  }
-  // player
-  const m = player.matrix; for(let y=0;y<m.length;y++) for(let x=0;x<m[y].length;x++) if(m[y][x]) drawCell(player.x+x, player.y+y, COLORS[player.type]);
-}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo"><i class="fas fa-robot"></i></div>
+      <h1 class="title">Knight Bot Pair Code</h1>
+      <p class="subtitle">Link your WhatsApp device</p>
+      <div class="social-icons">
+        <a href="https://www.youtube.com" target="_blank" class="youtube"><i class="fab fa-youtube"></i></a>
+        <a href="https://t.me/" target="_blank" class="telegram"><i class="fab fa-telegram-plane"></i></a>
+        <a href="https://whatsapp.com" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://github.com" target="_blank" class="github"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
 
-function merge(){
-  const m = player.matrix;
-  for(let y=0;y<m.length;y++) for(let x=0;x<m[y].length;x++) if(m[y][x]) arena[player.y+y][player.x+x] = player.type;
-}
+    <!-- Toggle Switch -->
+    <div class="toggle-container">
+      <div class="toggle-option active" data-mode="pair">
+        <i class="fas fa-key"></i> Pair Code
+      </div>
+      <div class="toggle-option" data-mode="qr">
+        <i class="fas fa-qrcode"></i> QR Code
+      </div>
+    </div>
 
-function collide(matrix, pos){
-  for(let y=0;y<matrix.length;y++) for(let x=0;x<matrix[y].length;x++) if(matrix[y][x]){
-    const ny = pos.y + y;
-    const nx = pos.x + x;
-    if(ny < 0 || nx < 0 || nx >= cols || ny >= rows) return true;
-    if(arena[ny][nx]) return true;
-  }
-  return false;
-}
+    <div class="input-group" id="inputGroup">
+      <label class="input-label">Enter your WhatsApp number with country code</label>
+      <input type="text" id="mobileNumber" class="input-field" placeholder="+917023951514" pattern="[+][0-9]{10,}" title="Please enter country code starting with + followed by number">
+    </div>
 
-function rotate(matrix, dir){
-  // transpose
-  for(let y=0;y<matrix.length;y++) for(let x=0;x<y;x++){ [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]]; }
-  if(dir>0) matrix.forEach(row => row.reverse());
-  else matrix.reverse();
-}
+    <button class="generate-btn" id="submit">
+      <i class="fas fa-key"></i> Generate Pair Code
+    </button>
 
-function playerRotate(dir){
-  const m = player.matrix;
-  const cloned = m.map(row => row.slice());
-  rotate(cloned, dir);
-  const pos = player.x;
-  let offset = 1;
-  while(collide(cloned, {x:pos, y:player.y})){
-    player.x += offset;
-    offset = -(offset + (offset>0?1:-1));
-    if(offset > cloned[0].length) { return; }
-  }
-  player.matrix = cloned;
-}
+    <div class="loading" id="loading">
+      <i class="fas fa-spinner"></i>
+    </div>
 
-function sweep(){
-  let rowCount = 0;
-  outer: for(let y=rows-1;y>=0;y--){
-    for(let x=0;x<cols;x++) if(!arena[y][x]) continue outer;
-    const row = arena.splice(y,1)[0].fill(0);
-    arena.unshift(row);
-    y++;
-    rowCount++;
-  }
-  if(rowCount>0){
-    const points = (rowCount===1?40: rowCount===2?100: rowCount===3?300:1200) * level;
-    score += points;
-    lines += rowCount;
-    level = Math.floor(lines/10) + 1;
-    dropInterval = Math.max(100, 1000 - (level-1)*120 - (Number(document.getElementById('speed').value)||0)*60);
-    updateUI();
-    playBeep(200 + rowCount*80, 0.12);
-  }
-}
+    <div class="code-display" id="codeDisplay">
+      Your pair code will appear here
+    </div>
 
-function updateUI(){
-  scoreEl.textContent = score;
-  levelEl.textContent = level;
-  linesEl.textContent = lines;
-  highEl.textContent = highscore;
-  renderMini(nextEl, nextPieces[0]);
-  renderMini(holdEl, holdPiece);
-  renderScores();
-}
+    <div class="qr-display" id="qrDisplay">
+      <img id="qrImage" class="qr-image" src="" alt="QR Code">
+      <div class="qr-instructions" id="qrInstructions">
+        Scan this QR code with your WhatsApp app
+      </div>
+    </div>
 
-function renderMini(container, pieceType){
-  container.innerHTML = '';
-  if(!pieceType) return;
-  const mini = document.createElement('canvas');
-  mini.width = 80; mini.height = 80;
-  const mctx = mini.getContext('2d');
-  const m = PIECES[pieceType];
-  const ts = 16;
-  m.forEach((row, y)=> row.forEach((v,x)=> {
-    if(v) {
-      mctx.fillStyle = COLORS[pieceType];
-      mctx.fillRect(x*ts+8, y*ts+8, ts-2, ts-2);
+    <button class="copy-btn" id="copy" onclick="copyCode()">
+      <i class="fas fa-copy"></i> Copy Code
+    </button>
+
+    <div class="footer">
+      <p>© 2025 Mr Unique Hacker | Knight Bot</p>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+  <script>
+    let currentMode = 'pair';
+
+    // Toggle functionality
+    document.querySelectorAll('.toggle-option').forEach(option => {
+      option.addEventListener('click', function() {
+        const mode = this.dataset.mode;
+        if (mode === currentMode) return;
+
+        // Update active state
+        document.querySelectorAll('.toggle-option').forEach(opt => opt.classList.remove('active'));
+        this.classList.add('active');
+
+        // Update mode
+        currentMode = mode;
+
+        // Update button and input visibility
+        const submitBtn = document.getElementById('submit');
+        const inputGroup = document.getElementById('inputGroup');
+        
+        if (mode === 'pair') {
+          submitBtn.innerHTML = '<i class="fas fa-key"></i> Generate Pair Code';
+          submitBtn.classList.remove('hidden');
+          inputGroup.classList.remove('hidden');
+        } else {
+          submitBtn.classList.add('hidden');
+          inputGroup.classList.add('hidden');
+          // Auto-generate QR code when QR mode is selected
+          generateQRCode();
+        }
+
+        // Clear displays
+        document.getElementById('codeDisplay').innerHTML = 'Your pair code will appear here';
+        document.getElementById('qrDisplay').style.display = 'none';
+        document.getElementById('codeDisplay').style.display = 'flex';
+      });
+    });
+
+    async function generateQRCode() {
+      const codeDisplay = document.getElementById("codeDisplay");
+      const qrDisplay = document.getElementById("qrDisplay");
+      const loadingSpinner = document.getElementById("loading");
+
+      loadingSpinner.style.display = "block";
+      codeDisplay.innerHTML = '';
+      qrDisplay.style.display = 'none';
+
+      try {
+        const response = await axios('/qr');
+        
+        if (response.data.qr) {
+          document.getElementById('qrImage').src = response.data.qr;
+          document.getElementById('qrInstructions').innerHTML = response.data.instructions.join('<br>');
+          qrDisplay.style.display = 'block';
+          codeDisplay.style.display = 'none';
+        } else {
+          codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Failed to generate QR code</div>';
+          codeDisplay.style.display = 'flex';
+        }
+      } catch (error) {
+        console.error("Error generating QR code:", error);
+        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Error generating QR code. Please try again.</div>';
+        codeDisplay.style.display = 'flex';
+      } finally {
+        loadingSpinner.style.display = "none";
+      }
     }
-  }));
-  container.appendChild(mini);
-}
 
-function renderScores(){
-  const list = JSON.parse(localStorage.getItem('tetris_scores')||'[]');
-  scoresEl.innerHTML = '';
-  list.slice(0,10).forEach((s,i)=>{
-    const div = document.createElement('div');
-    div.className='row';
-    div.style.justifyContent='space-between';
-    div.style.padding='6px 0';
-    div.style.borderBottom='1px solid rgba(255,255,255,0.02)';
-    div.innerHTML = `<div class="small">${i+1}. ${s.date}</div><div class="small">${s.score}</div>`;
-    scoresEl.appendChild(div);
-  });
-}
+    document.getElementById("submit").addEventListener("click", async (e) => {
+      e.preventDefault();
+      
+      const mobileNumberInput = document.getElementById("mobileNumber");
+      const codeDisplay = document.getElementById("codeDisplay");
+      const qrDisplay = document.getElementById("qrDisplay");
+      const loadingSpinner = document.getElementById("loading");
 
-function createPlayer(){
-  if(nextPieces.length<3) refillQueue();
-  const type = nextPieces.shift();
-  const matrix = PIECES[type].map(r=>r.slice());
-  return {x: Math.floor((cols - matrix[0].length)/2), y: -1, matrix, type};
-}
+      const mobileNumber = mobileNumberInput.value.trim();
+      if (!mobileNumber) {
+        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Please enter your WhatsApp number</div>';
+        return;
+      }
 
-function refillQueue(){
-  const bag = Object.keys(PIECES).slice();
-  // shuffle
-  for(let i=bag.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [bag[i],bag[j]]=[bag[j],bag[i]]; }
-  nextPieces = nextPieces.concat(bag);
-  updateUI();
-}
+      loadingSpinner.style.display = "block";
+      codeDisplay.innerHTML = '';
+      qrDisplay.style.display = 'none';
 
-function drop(){
-  player.y++;
-  if(collide(player.matrix, {x:player.x, y:player.y})){
-    player.y--;
-    merge();
-    sweep();
-    // check game over
-    if(player.y < 0){ gameOver(); return; }
-    player = createPlayer();
-    canHold = true;
-  }
-  dropCounter = 0;
-}
-
-function hardDrop(){
-  while(!collide(player.matrix, {x:player.x, y:player.y+1})){ player.y++; }
-  drop();
-  score += 2 * level;
-  updateUI();
-  playBeep(900,0.02);
-}
-
-function move(dir){
-  player.x += dir;
-  if(collide(player.matrix, {x:player.x, y:player.y})) player.x -= dir;
-}
-
-function hold(){
-  if(!canHold) return;
-  if(!holdPiece){ holdPiece = player.type; player = createPlayer(); }
-  else { const tmp = holdPiece; holdPiece = player.type; player = {x: Math.floor((cols - PIECES[tmp][0].length)/2), y:-1, matrix:PIECES[tmp].map(r=>r.slice()), type: tmp}; }
-  canHold = false;
-  updateUI();
-}
-
-function gameOver(){
-  playBeep(80,0.2);
-  const now = new Date().toLocaleString();
-  const list = JSON.parse(localStorage.getItem('tetris_scores')||'[]');
-  list.unshift({date:now, score});
-  localStorage.setItem('tetris_scores', JSON.stringify(list));
-  if(score > highscore){ highscore = score; localStorage.setItem('tetris_high', highscore); localStorage.setItem('tetris_high_date', now); }
-  updateUI();
-  running = false;
-  alert('Game Over · Score: ' + score);
-  resetGame();
-}
-
-function resetGame(){
-  arena = createMatrix(cols, rows);
-  player = createPlayer();
-  nextPieces = [];
-  refillQueue();
-  holdPiece = null;
-  canHold = true;
-  score = 0; lines = 0; level = 1;
-  dropInterval = 1000;
-  updateUI();
-}
-
-function playBeep(freq=440, dur=0.05){
-  if(!audioOn) return;
-  const ctx = window.audioCtx || (window.audioCtx = new (window.AudioContext||window.webkitAudioContext)());
-  const o = ctx.createOscillator(); const g = ctx.createGain();
-  o.type='sine'; o.frequency.value = freq; g.gain.value = 0.06;
-  o.connect(g); g.connect(ctx.destination); o.start();
-  g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
-  o.stop(ctx.currentTime + dur + 0.02);
-}
-
-// input
-document.addEventListener('keydown', e=>{
-  if(!running) return;
-  if(e.key === 'ArrowLeft') move(-1);
-  if(e.key === 'ArrowRight') move(1);
-  if(e.key === 'ArrowDown') { drop(); score += 0; }
-  if(e.key === 'ArrowUp') playerRotate(1);
-  if(e.key === ' ') { hardDrop(); }
-  if(e.key.toLowerCase() === 'c') hold();
-  updateUI();
-});
-
-document.getElementById('m-left').addEventListener('click', ()=>{ move(-1); updateUI(); });
-document.getElementById('m-right').addEventListener('click', ()=>{ move(1); updateUI(); });
-document.getElementById('m-rot').addEventListener('click', ()=>{ playerRotate(1); updateUI(); });
-document.getElementById('m-drop').addEventListener('click', ()=>{ drop(); updateUI(); });
-
-let running = false;
-let audioOn = true;
-
-document.getElementById('btn-start').addEventListener('click', ()=>{
-  if(!running){ running = true; resetGame(); lastTime = 0; updateUI(); requestAnimationFrame(update); }
-});
-document.getElementById('btn-pause').addEventListener('click', ()=>{
-  running = !running;
-  if(running){ lastTime = 0; requestAnimationFrame(update); }
-});
-document.getElementById('btn-reset').addEventListener('click', resetGame);
-document.getElementById('btn-sound').addEventListener('click', ()=>{
-  audioOn = !audioOn; document.getElementById('btn-sound').textContent = 'Sound: ' + (audioOn? 'On':'Off');
-});
-
-// export/import
-document.getElementById('btn-export').addEventListener('click', ()=>{
-  const data = {scores: JSON.parse(localStorage.getItem('tetris_scores')||'[]'), high: highscore};
-  document.getElementById('data-area').value = JSON.stringify(data, null, 2);
-});
-document.getElementById('btn-import').addEventListener('click', ()=>{
-  try{
-    const d = JSON.parse(document.getElementById('data-area').value);
-    if(d.scores) localStorage.setItem('tetris_scores', JSON.stringify(d.scores));
-    if(d.high) { localStorage.setItem('tetris_high', d.high); highscore = d.high; }
-    updateUI();
-    alert('Datos importados');
-  }catch(e){ alert('JSON inválido'); }
-});
-
-function update(time=0){
-  const delta = time - lastTime;
-  lastTime = time;
-  dropCounter += delta;
-  if(dropCounter > dropInterval){
-    drop();
-    dropCounter = 0;
-  }
-  draw();
-  if(running) requestAnimationFrame(update);
-}
-
-// init
-refillQueue();
-resetGame();
-updateUI();
-renderMini(nextEl, nextPieces[0]);
-
-// make responsive cell size
-function resizeCanvas(){
-  const w = canvas.clientWidth;
-  cellSize = Math.floor(w / cols);
-  canvas.width = cellSize * cols;
-  canvas.height = cellSize * rows;
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-
-// utility: simple beep on start
-playBeep(800,0.06);
-
-})();
-</script>
+      try {
+        const response = await axios(`/pair?number=${mobileNumber.replace(/[^0-9]/g, "")}`);
+        
+        const code = response.data.code || "Service Unavailable";
+        if (code === "Service Unavailable") {
+          codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Service Unavailable</div>';
+        } else {
+          codeDisplay.innerHTML = `<div class="success-message"><i class="fas fa-check-circle"></i> CODE: ${code}</div>`;
+        }
+        codeDisplay.style.display = 'flex';
+      } catch (error) {
+        console.error("Error generating code:", error);
+        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Error generating code. Please try again.</div>';
+        codeDisplay.style.display = 'flex';
+      } finally {
+        loadingSpinner.style.display = "none";
+      }
+    });
+    function copyCode() {
+      const codeDisplay = document.getElementById("codeDisplay").innerText;
+      const code = codeDisplay.replace('CODE: ', '');
+      navigator.clipboard.writeText(code).then(() => {
+        const copyBtn = document.getElementById("copy");
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+        }, 2000);
+      }).catch(err => {
+        console.error("Failed to copy text: ", err);
+      });
+    }
+  </script>
 </body>
-</html>
+  </html>
+  
